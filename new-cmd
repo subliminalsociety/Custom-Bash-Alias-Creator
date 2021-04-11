@@ -1,0 +1,89 @@
+#!/bin/bash
+
+
+#STARTUP ROOT WARNING
+clear;
+echo "Running as root messes the program up."
+echo "type -h for help, -c for creating commands, -e for extra info";
+
+
+#VARIABLES
+BASHRC_PATH="/home/$USER/.bashrc";
+cmdTOKEN=$2;
+cmdINSTRUCTIONS=$3;
+
+function Help() {
+	echo "=========================";
+	echo "|          Help         |";
+	echo "=========================";
+	echo;
+	echo "[USAGE:]"
+	echo "     ./new-cmd  [option]  parameter-1  parameter-2";
+	echo;
+	echo "[OPTIONS:]";
+	echo "        Help Screen:   -h     [no parameters]";
+	echo "     Create Command:   -c     [two parameters]";
+	echo;
+	echo "[-c PARAMETERS:]"
+	echo "     [command-name/token]	 [command/instructions]";
+	echo;
+	echo "[EXAMPLE]";
+	echo "     This creates a new command called 'GotoDesktop'";
+	echo "     		./new-cmd -c 'GotoDesktop' 'cd /home/$USER/Desktop'";
+	echo "	   This creates a new command called 'UpdateAll'";
+	echo "			./new-cmd -c 'UpdateAll' 'pacman -Syyu'";
+	echo;
+	echo "=========================";
+}
+
+function Create(){
+	echo "=========================";
+	echo "|   Creating Command    |";
+	echo "=========================";
+	ALIAS_FORMATTED="alias $cmdTOKEN=\"$cmdINSTRUCTIONS\"";
+	echo $ALIAS_FORMATTED >> $BASHRC_PATH;
+	source $BASHRC_PATH;
+	echo "If there were no errors, it succesfully added the command."
+	echo "In order for it to take effect, you need to reload your terminal."
+	echo;
+	
+}
+
+function ExtraInfo(){
+	echo "=========================";
+	echo "|      Extra  Info       |";
+	echo "=========================";
+	echo "Running this program as root messes up the ability to save the new commands.";
+	echo;
+	echo "To remove a command..."
+	echo "1.) Run this in a terminal:";
+	echo "     sudo nano ~/.bashrc"
+	echo "2.) Go to the last line of the document & remove:"
+	echo "     alias [your-cmd]=[\"your-instructions\"]";
+	echo "     Then Hold Ctrl+X to exit, hit Y to confirm save,"
+	echo "     & hit Enter to confirm directory/name";
+	echo "3.) Then run this in a terminal:"
+	echo "		\"source ~/.bashrc\"";
+	echo;
+	echo "To add newcmd as a command, so that way you don't have to run it out of your directory..."
+	echo "Type:    ./new-cmd -c \"newcmd\" \"your-saved-path\./new-cmd\""
+	echo "Where your-saved-path equals the directory file-path that new-cmd is saved in..."
+}
+
+while getopts ":hce" option; do
+	case $option in
+	h)
+		Help
+		;;
+	c)
+		Create
+		;;
+	e)
+		ExtraInfo
+		;;
+	esac
+done
+
+
+
+#source ~/.bashrc
